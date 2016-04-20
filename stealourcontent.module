@@ -302,14 +302,19 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
  */
 function soc_save_node_views() {
 
-  $ip = $_SERVER['REMOTE_ADDR'];
-  $referer = $_SERVER['HTTP_REFERER'];
-  $useragent = $_SERVER['HTTP_USER_AGENT'];
+  $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'unknown';
+  //$ip = $_SERVER['REMOTE_ADDR'];
+  //$useragent = $_SERVER['HTTP_USER_AGENT'];
   // Need browscap...
   //$browser = get_browser(null, true);
+  $nid = isset($_GET['nid']) ? $_GET['nid'] : 0;
 
-  // Just to test recording.
-  watchdog('soc', $_SERVER['HTTP_REFERER']);
-  watchdog('soc', $_GET['nid']);
-
+  db_insert('stealourcontent_stats')
+  ->fields(array('nid', 'referer', 'created'))
+  ->values(array(
+      'nid' => (int)$nid,
+      'referer' => filter_xss($referer),
+      'created' => REQUEST_TIME
+  ))
+  ->execute();
 }

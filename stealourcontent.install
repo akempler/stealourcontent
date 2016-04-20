@@ -7,7 +7,7 @@
 /**
  * Implements hook_schema().
  */
-function devernote_schema() {
+function stealourcontent_schema() {
 
   $schema['stealourcontent_stats'] = array(
     'description' => 'View stats for embedded nodes.',
@@ -25,8 +25,8 @@ function devernote_schema() {
         'not null' => TRUE,
         'default' => '0',
       ),
-      'referrer' => array(
-        'description' => 'The referrer url.',
+      'referer' => array(
+        'description' => 'The referer url.',
         'type' => 'varchar',
         'length' => '250',
         'default' => '',
@@ -41,7 +41,7 @@ function devernote_schema() {
     'primary key' => array('sid'),
     'indexes' => array(
       'nid' => array('nid'),
-      'referrer' => array('referrer'),
+      'referer' => array('referer'),
       'created' => array('created'),
     ),
   );

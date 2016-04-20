@@ -8,8 +8,6 @@
 function soc_tracking_pixel_gif() {
   ignore_user_abort(true);
 
-  soc_save_node_views();
-
   // Ensure the tracking pixel is always served by Drupal so the cookie is set.
   drupal_page_is_cacheable(FALSE);
 
@@ -32,6 +30,9 @@ function soc_tracking_pixel_gif() {
   ob_flush();
   flush();
   ob_end_flush();
+
+  // Save the view to the db.
+  soc_save_node_views();
 
   drupal_exit();
 }

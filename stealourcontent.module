@@ -15,9 +15,9 @@ function stealourcontent_menu() {
   $items['admin/reports/stealourcontent'] = array(
     'title' => 'StealOurContent Stats',
     'description' => 'Number of views for republished content.',
-    'page callback' => 'soc_admin',
+    'page callback' => 'soc_stats',
     'access arguments' => array('administer stealourcontent'),
-    'file' => 'stealourcontent.admin.inc',
+    'file' => 'soc_stats.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
   $items['stealourcontent/%ctools_js/%'] = array(
@@ -31,6 +31,7 @@ function stealourcontent_menu() {
     'page callback' => 'soc_tracking_pixel_gif',
     'file' => 'soc_tracking_pixel.pages.inc',
     'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
   );
 
   return $items;

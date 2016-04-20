@@ -40,4 +40,9 @@ function template_preprocess_soc_modal_window(&$vars) {
     global $base_url;
     $vars['soc_tracking_pixel'] = theme('image', array('path' => $base_url . '/track.gif?nid=' . $vars['node']->nid));
   }
+
+  $licenses = soc_licenses();
+  $license = variable_get('soc_license', 'cc-by-nd-4');
+  $image = theme('image', array('path' => $licenses[$license]['image'], 'alt' => 'License'));
+  $vars['soc_license'] = l($image, $licenses[$license]['link'], array('html' => TRUE));
 }

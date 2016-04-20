@@ -4,8 +4,6 @@
  * Displays a button which opens a modal allowing copying of node content.
  *
  * Available variables:
- *  $soc_link_text
- *    The text to display on the button.
  *  $soc_guidelines
  *    Guidelines for republishing the content.
  *  $soc_instructions
@@ -19,16 +17,18 @@
  *    <img src="http://example.com/track.gif?nid=1456">
  *  $soc_rendered_node
  *    The fully rendered node.
+ *  $soc_license
+ *    A themed image/link for the content license.
  *  $node
  *    Node object.
  *
  * @see template_preprocess_soc_button().
  */
-
 ?>
 
 <div id="soc_modal_wrapper">
   <p><?php print $soc_guidelines; ?></p>
+  <div id="soc_license"><?php print $soc_license; ?></div>
   <textarea>
     <?php print $soc_rendered_node; ?>
     <?php print $soc_branding; ?>

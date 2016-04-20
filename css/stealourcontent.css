@@ -24,6 +24,18 @@ a.soc_button:hover {
   text-decoration: none;
 }
   
+#soc_modal_wrapper {
+  position: relative;
+}
 #soc_modal_wrapper textarea {
   width: 80%;
+}
+
+#soc_modal_wrapper #soc_license {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+#soc_modal_wrapper #soc_license img {
+  width: 100px;
 }

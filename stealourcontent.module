@@ -230,6 +230,23 @@ function soc_settings_form($callby, &$form, $form_state = array(), $conf = array
     '#default_value' => variable_get('soc_tracking', 1),
     '#description' => t('If checked, a tracking pixel will be added to the node content.'),
   );
+
+  $licenses = soc_licenses();
+  $license_options = array();
+  foreach ($licenses as $key => $info) {
+    $license_options[$key] = $info['title'];
+  }
+
+  // TODO should provide preview with icon/link so description can be read.
+  //  Might be best to use their web integration.
+  $form['soc_license'] = array(
+    '#type' => 'select',
+    '#title' => t('License'),
+    '#options' => $license_options,
+    '#default_value' => variable_get('soc_license', 'cc-by-nd-4'),
+    '#description' => t('Select a license for content reuse.'),
+  );
+
 }
 
 
@@ -295,6 +312,27 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
   }
 
   return $text;
+}
+
+
+/**
+ * Get the available licenses for content reuse.
+ *
+ * @return array
+ *  An array of available licenses.
+ */
+function soc_licenses() {
+
+  $img_path = drupal_get_path('module', 'stealourcontent') . '/images';
+  $licenses = array(
+      'cc-by-nd-4' => array(
+          'title' => 'CC: Attribution-NoDerivatives',
+          'link' => 'http://creativecommons.org/licenses/by-nd/4.0/',
+          'icon' => $img_path . '/cc-by-nd-4.png'
+      )
+  );
+
+  return $licenses;
 }
 
 

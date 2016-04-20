@@ -1,0 +1,5 @@
+name = StealOurContent
+description = Provide a modal to republish content on third party site.
+core = 7.x
+
+dependencies[] = ctools

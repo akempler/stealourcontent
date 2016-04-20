@@ -1,0 +1,315 @@
+<?php
+/**
+ * @file
+ * Contains block, theme, and hooks for StealOurContent module.
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function stealourcontent_menu() {
+
+  $items = array();
+
+  $items['admin/reports/stealourcontent'] = array(
+    'title' => 'StealOurContent Stats',
+    'description' => 'Number of views for republished content.',
+    'page callback' => 'soc_admin',
+    'access arguments' => array('administer stealourcontent'),
+    'file' => 'stealourcontent.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['stealourcontent/%ctools_js/%'] = array(
+    'title' => 'Steal Our Content',
+    'page arguments' => array(1, 2),
+    'page callback' => 'soc_modal_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['track.gif'] = array(
+    'page callback' => 'soc_tracking_pixel_gif',
+    'file' => 'soc_tracking_pixel.pages.inc',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function stealourcontent_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes'] += array(
+    'stealourcontent_node' => array(
+      'label' => t('StealOurContent'),
+      'custom settings' => FALSE,
+    ),
+  );
+
+  return $entity_info;
+}
+
+
+/**
+ * Menu callback to generate the republish popup/modal.
+ *
+ * @param string $js
+ * @param string $nid
+ *
+ * @return The content to be rendered.
+ */
+function soc_modal_page($js = NULL, $nid = NULL) {
+
+  if ($nid == NULL) {
+    return t('Sorry, node not found.');
+  }
+
+  // TODO check for $js = ajax?
+  // See template_preprocess_soc_button()
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
+
+  $node = node_load($nid);
+  $content = theme('soc_modal_window', array('node' => $node));
+
+  return ctools_modal_render($node->title, $content);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function stealourcontent_permission() {
+  return array(
+    'administer stealourcontent' => array(
+      'title' => t('Administer the StealOurContent module'),
+      'description' => t('Access the StealOurContent analytics reports.'),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+function stealourcontent_block_info() {
+  $blocks['soc_block'] = array(
+    'info' => t('Republish Button'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function stealourcontent_block_configure($delta = '') {
+  $form = array();
+  if ($delta == 'soc_block') {
+    soc_settings_form('block', $form);
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function stealourcontent_block_save($delta = '', $edit = array()) {
+  if ($delta == 'soc_block') {
+    variable_set('soc_link_text', $edit['soc_link_text']);
+    variable_set('soc_title', $edit['soc_title']);
+    variable_set('soc_guidelines', $edit['soc_guidelines']);
+    variable_set('soc_instructions', $edit['soc_instructions']);
+    variable_set('soc_branding', $edit['soc_branding']);
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function stealourcontent_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'soc_block':
+      $block['subject'] = '';
+      $block['content'] = array(
+        '#markup' => soc_block(),
+        '#attached' => array('css' => array(drupal_get_path('module', 'stealourcontent') . '/css/stealourcontent.css')),
+      );
+
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Display a Republish button to open a modal.
+ *
+ * @return string
+ *   The html to be displayed.
+ */
+function soc_block() {
+
+  global $user;
+
+  // Only display the block if we are on a node page
+  // and the user has access to view that node.
+  $node = menu_get_object();
+  if (($node) && node_access('view', $node, $user)) {
+    $out = theme('soc_button', array('node' => $node));
+  } else {
+    $out = '';
+  }
+
+  return $out;
+}
+
+
+/**
+ * Implements hook_form().
+ */
+function stealourcontent_form($form, &$form_state) {
+  // Getting available contexts from menu.
+  $context = menu_get_object();
+  if (!($context && isset($context->nid))) {
+    return NULL;
+  }
+  _republish_content_form('block', $context, $form, $form_state);
+  return $form;
+}
+
+/**
+ * Builds Settings Form.
+ */
+function soc_settings_form($callby, &$form, $form_state = array(), $conf = array()) {
+  $form['soc_link_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Republish Link Text'),
+    '#description' => t('Enter text to be displayed on the Republish button.'),
+    '#default_value' => stealourcontent_text('soc_link_text'),
+  );
+  $form['soc_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Republish Box Title'),
+    '#description' => t('Enter the title for Republish popup box.'),
+    '#default_value' => stealourcontent_text('soc_title'),
+  );
+  $form['soc_guidelines'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Republish Guidelines'),
+    '#description' => t('Enter a descriptive guideline to be displayed on the Republish popup box above the main body. Supports Filtered HTML format.'),
+    '#default_value' => stealourcontent_text('soc_guidelines'),
+  );
+  $form['soc_instructions'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Republish Instructions'),
+    '#description' => t('Enter instructions to be displayed on the Republish overlay box below the main body.'),
+    '#default_value' => stealourcontent_text('soc_instructions'),
+  );
+  $form['soc_branding'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Branding Text'),
+    '#description' => t('Enter the Branding text to be included in editor.'),
+    '#default_value' => stealourcontent_text('soc_branding', NULL, FALSE),
+  );
+
+  if (module_exists("token")) {
+    $form['soc_token_help'] = array(
+      '#type' => 'markup',
+      '#token_types' => array('node'),
+      '#theme' => 'token_tree_link',
+    );
+  }
+
+  $form['soc_tracking'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Track content views'),
+    '#default_value' => variable_get('soc_tracking', 1),
+    '#description' => t('If checked, a tracking pixel will be added to the node content.'),
+  );
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function stealourcontent_theme() {
+  $path = drupal_get_path('module', 'stealourcontent');
+
+  return array(
+    'soc_button' => array(
+      'template' => 'soc_button',
+      'file' => 'theme.inc',
+      'path' => $path . '/theme',
+      'variables' => array(
+        'node' => NULL,
+      ),
+    ),
+    'soc_modal_window' => array(
+      'template' => 'soc_modal_window',
+      'file' => 'theme.inc',
+      'path' => $path . '/theme',
+      'variables' => array(
+        'node' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Default text. Can be overridden in the block config.
+ *
+ * @example $text = stealourcontent_text('branding', NULL, TRUE, $vars['node']);
+ */
+function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = array()) {
+  $langcode = isset($language) ? $language->language : NULL;
+
+  switch ($key) {
+    case 'soc_link_text':
+      $text = t('Republish', array(), array('langcode' => $langcode));
+      break;
+
+    case 'soc_title':
+      $text = t('Republish this content', array(), array('langcode' => $langcode));
+      break;
+
+    case 'soc_guidelines':
+      $text = t('Like this content? Republish it!', array(), array('langcode' => $langcode));
+      break;
+
+    case 'soc_instructions':
+      $text = t('Copy the above code and paste it into your website to republish.', array(), array('langcode' => $langcode));
+      break;
+
+    case 'soc_branding':
+      $text = t('This article was originally published on <a href="[site:url]">[site:name]</a>. Read the <a href="[node:url]">original article</a>.', array(), array('langcode' => $langcode));
+      break;
+  }
+
+  if ($replace) {
+    // Token Replace the text.
+    return token_replace($text, array('node' => $node));
+  }
+
+  return $text;
+}
+
+
+/**
+ * Record the remote node views.
+ */
+function soc_save_node_views() {
+
+  $ip = $_SERVER['REMOTE_ADDR'];
+  $referer = $_SERVER['HTTP_REFERER'];
+  $useragent = $_SERVER['HTTP_USER_AGENT'];
+  // Need browscap...
+  //$browser = get_browser(null, true);
+
+  // Just to test recording.
+  watchdog('soc', $_SERVER['HTTP_REFERER']);
+  watchdog('soc', $_GET['nid']);
+
+}

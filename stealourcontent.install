@@ -1,0 +1,77 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the StealOurContent module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function devernote_schema() {
+
+  $schema['stealourcontent_stats'] = array(
+    'description' => 'View stats for embedded nodes.',
+    'fields' => array(
+      'sid' => array(
+        'description' => 'The unique record id.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.nid of the node created from the note.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => '0',
+      ),
+      'referrer' => array(
+        'description' => 'The referrer url.',
+        'type' => 'varchar',
+        'length' => '250',
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the stat was recorded.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('sid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'referrer' => array('referrer'),
+      'created' => array('created'),
+    ),
+  );
+
+  return $schema;
+}
+
+
+/**
+ * Implements hook_install().
+ */
+function stealourcontent_install() {
+
+  // TODO retrieve all node bundles and loop through each.
+  $settings = field_bundle_settings('node', 'article');
+  $settings['view_modes']['stealourcontent_node']['custom_settings'] = TRUE;
+  field_bundle_settings('node', 'article', $settings);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function stealourcontent_uninstall() {
+
+  variable_del('soc_link_text');
+  variable_del('soc_title');
+  variable_del('soc_guidelines');
+  variable_del('soc_instructions');
+  variable_del('soc_branding');
+  variable_del('soc_tracking');
+
+  // TODO Remove custom view mode.
+}

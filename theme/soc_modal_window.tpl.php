@@ -28,7 +28,7 @@
 
 <div id="soc_modal_wrapper">
   <p><?php print $soc_guidelines; ?></p>
-  <div id="soc_license"><?php print $soc_license; ?></div>
+  <div id="soc_license"><strong><?php print $soc_license; ?></strong></div>
   <textarea>
     <?php print $soc_rendered_node; ?>
     <?php print $soc_branding; ?>

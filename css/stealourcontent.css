@@ -29,8 +29,8 @@ a.soc_button:hover {
 }
 #soc_modal_wrapper textarea {
   width: 80%;
+  height: 400px;
 }
-
 #soc_modal_wrapper #soc_license {
   position: absolute;
   right: 10px;
@@ -38,4 +38,7 @@ a.soc_button:hover {
 }
 #soc_modal_wrapper #soc_license img {
   width: 100px;
+}
+#modalContent a.close img {
+  margin-left: 10px;
 }

@@ -76,7 +76,7 @@ function soc_modal_page($js = NULL, $nid = NULL) {
   $node = node_load($nid);
   $content = theme('soc_modal_window', array('node' => $node));
 
-  return ctools_modal_render($node->title, $content);
+  return ctools_modal_render(t('Steal Our Content!'), $content);
 }
 
 /**
@@ -294,7 +294,7 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
       break;
 
     case 'soc_guidelines':
-      $text = t('Like this content? Republish it!', array(), array('langcode' => $langcode));
+      $text = t('Like this content? Republish it. But please do not edit the piece. Also make sure that you attribute the author, and mention the article was originally published on %sitename', array('%sitename' => variable_get('site_name', 'this site')), array('langcode' => $langcode));
       break;
 
     case 'soc_instructions':
@@ -356,4 +356,63 @@ function soc_save_node_views() {
       'created' => REQUEST_TIME
   ))
   ->execute();
+}
+
+
+/**
+ * Load stats from the database.
+ *
+ * @return array
+ *  An array of stealourcontent_stats records containing all fields.
+ *  Grouped by referer, ordered by nid, referer.
+ *
+ *  @todo For sites with large amount of shares we'll want paged results.
+ */
+function soc_load_stats() {
+
+  $stats = array();
+
+  $result = db_select('stealourcontent_stats', 'stats')
+  ->fields('stats')
+  ->orderBy('stats.referer', 'ASC')
+  ->orderBy('stats.nid', 'DESC')
+  ->execute()
+  ->fetchAll();
+
+  return $result;
+}
+
+/**
+ * Get view counts per referer.
+ *
+ * @return array
+ *  An array of stats indexed by referer. Each referer contains an associative
+ *  array of nid => view count.
+ */
+function get_referer_view_counts() {
+
+  $records = soc_load_stats();
+  //var_dump($records);
+  $rows = array();
+  if (count($records)) {
+    $first_key = key($records);
+    $nid = $records[$first_key]->nid;
+    $referer = $records[$first_key]->referer;
+    $counts = array();
+    $count = 0;
+    foreach ($records as $record) {
+      if ($nid == $record->nid && $referer == $record->referer) {
+        $count++;
+      } else {
+        $count = 1;
+      }
+      $rows[$record->referer][$record->nid] = $count;
+
+
+      $nid = $record->nid;
+      $referer = $record->referer;
+    }
+  }
+
+  return $rows;
 }

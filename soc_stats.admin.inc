@@ -7,49 +7,39 @@
 
 function soc_stats() {
 
+  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/jquery.tablesorter.min.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/soc_stats.js', 'file');
+
+  soc_load_stats();
+  get_referer_view_counts();
+
+
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
+  //$header = array();
   $header = array(
     'nid' => t('nid'),
     'title' => t('Title'),
-    'referrer' => t('Referer'),
-    'count' => t('Count')
+    'referer' => t('Referer'),
+    'count' => array("data" => t('Views'))
   );
 
-  $rows = array(
-    array(
-      'nid' => '<a href="#">2567</a>',
-      'title' => '<a href="#">Sample node 1</a>',
-      'referrer' => '<a href="#">http://example.com/page5</a>',
-      'created' => 24
-    ),
-    array(
-      'nid' => '<a href="#">2567</a>',
-      'title' => '<a href="#">Sample node 1</a>',
-      'referrer' => '<a href="#">http://somesite.com/page2</a>',
-      'created' => 15
-    ),
-    array(
-      'nid' => '<a href="#">2567</a>',
-      'title' => '<a href="#">Sample node 1</a>',
-      'referrer' => '<a href="#">http://smith.com/pages/somepage</a>',
-      'created' => 6
-    ),
-    array(
-      'nid' => '<a href="#">443</a>',
-      'title' => '<a href="#">Sample node 2</a>',
-      'referrer' => '<a href="#">http://acme.com/page</a>',
-      'created' => 15
-    ),
-    array(
-      'nid' => '<a href="#">443</a>',
-      'title' => '<a href="#">Sample node 2</a>',
-      'referrer' => '<a href="#">http://widgets.com/pages/somepage</a>',
-      'created' => 6
-    )
-  );
+  $records = get_referer_view_counts();
+  $rows = array();
 
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  foreach ($records as $referer => $nids) {
+    foreach ($nids as $nid => $count) {
+      $node = node_load((int)$nid);
+      $rows[] = array(
+        'nid' => l($nid, 'node/' . $nid),
+        'title' => l(check_plain($node->title), 'node/' . $nid),
+        'referer' => l(check_plain($referer), check_plain($referer)),
+        'count' => $count,
+      );
+    }
+  }
+
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'soc_stats_table', 'class' => array('tablesorter'))));
 
   return $output;
 }

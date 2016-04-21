@@ -325,11 +325,11 @@ function soc_licenses() {
 
   $img_path = drupal_get_path('module', 'stealourcontent') . '/images';
   $licenses = array(
-      'cc-by-nd-4' => array(
-          'title' => 'CC: Attribution-NoDerivatives',
-          'link' => 'http://creativecommons.org/licenses/by-nd/4.0/',
-          'image' => $img_path . '/cc-by-nd-4.png'
-      )
+    'cc-by-nd-4' => array(
+      'title' => 'CC: Attribution-NoDerivatives',
+      'link' => 'http://creativecommons.org/licenses/by-nd/4.0/',
+      'image' => $img_path . '/cc-by-nd-4.png'
+    )
   );
 
   return $licenses;
@@ -351,9 +351,9 @@ function soc_save_node_views() {
   db_insert('stealourcontent_stats')
   ->fields(array('nid', 'referer', 'created'))
   ->values(array(
-      'nid' => (int)$nid,
-      'referer' => filter_xss($referer),
-      'created' => REQUEST_TIME
+    'nid' => (int)$nid,
+    'referer' => filter_xss($referer),
+    'created' => REQUEST_TIME
   ))
   ->execute();
 }

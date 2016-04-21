@@ -7,8 +7,10 @@
 
 function soc_stats() {
 
-  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/jquery.tablesorter.min.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/tablesorter/jquery.tablesorter.min.js', 'file');
   drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/soc_stats.js', 'file');
+
+  drupal_add_css(drupal_get_path('module', 'stealourcontent') . '/js/tablesorter/themes/blue/tablesorter.css');
 
   soc_load_stats();
   get_referer_view_counts();

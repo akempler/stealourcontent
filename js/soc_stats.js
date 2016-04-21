@@ -9,7 +9,9 @@
     attach: function(context, settings) {
 
       $(document).ready(function() {
-        $("#soc_stats_table").tablesorter(); 
+        //$("#soc_stats_table").tablesorter(); 
+        $("#soc_stats_table").tablesorter({sortList:[[3,1]], widgets: ['zebra']});
+        //$("#options").tablesorter({sortList: [[0,0]], headers: { 3:{sorter: false}, 4:{sorter: false}}});
       });
     }
   };

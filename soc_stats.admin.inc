@@ -18,12 +18,11 @@ function soc_stats() {
 
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
-  //$header = array();
   $header = array(
     'nid' => t('nid'),
     'title' => t('Title'),
     'referer' => t('Referer'),
-    'count' => array("data" => t('Views'))
+    'count' => t('Views')
   );
 
   $records = get_referer_view_counts();

@@ -19,6 +19,8 @@
  *    The fully rendered node.
  *  $soc_license
  *    A themed image/link for the content license.
+ *  $display_submitted
+ *    TRUE if "Display author and date information" is checked for this content type.
  *  $node
  *    Node object.
  *
@@ -32,6 +34,9 @@
   <textarea>
     <?php print $soc_rendered_node; ?>
     <?php print $soc_branding; ?>
+    <?php if ($display_submitted): ?>
+      <p><span class="submitted">Originally posted on <?php print date( "F j, Y", $node->created)?> by <?php print $author ?></span></p>
+    <?php endif; ?>
     <?php print $soc_tracking_pixel; ?>
   </textarea>
   <p><?php print $soc_instructions; ?></p>

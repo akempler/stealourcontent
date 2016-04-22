@@ -14,4 +14,5 @@ hide($content['links']);
 
 <div id="soc_modal_node_content">
   <?php print render($content); ?>
+  <?php print render($content['submitted']); ?>
 </div>

@@ -30,8 +30,9 @@ function template_preprocess_soc_modal_window(&$vars) {
   $vars['soc_title'] = variable_get('soc_title', stealourcontent_text('soc_title'));
   $vars['soc_guidelines'] = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
   $vars['soc_instructions'] = variable_get('soc_instructions', stealourcontent_text('soc_instructions'));
-  $vars['soc_branding'] = variable_get('soc_branding', stealourcontent_text('soc_branding', NULL, TRUE, $vars['node']));
   $vars['soc_tracking'] = variable_get('soc_tracking', 1);
+  $branding = variable_get('soc_branding', stealourcontent_text('soc_branding'));
+  $vars['soc_branding'] = token_replace($branding, array('node' => $vars['node']));
 
   $vars['soc_rendered_node'] = render(node_view($vars['node'], 'stealourcontent_node', NULL));
 

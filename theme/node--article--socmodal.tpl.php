@@ -3,11 +3,15 @@
  * @file
  * Custom template for the stealourcontent modal node.
  */
-print '<h1>' . $title . '</h1>';
+?>
+
+<?php
+print '<h1>' . check_plain($title) . '</h1>';
 
 hide($content['comments']);
 hide($content['links']);
-
-print render($content);
-
 ?>
+
+<div id="soc_modal_node_content">
+  <?php print render($content); ?>
+</div>

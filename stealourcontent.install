@@ -55,10 +55,12 @@ function stealourcontent_schema() {
  */
 function stealourcontent_install() {
 
-  // TODO retrieve all node bundles and loop through each.
-  $settings = field_bundle_settings('node', 'article');
-  $settings['view_modes']['stealourcontent_node']['custom_settings'] = TRUE;
-  field_bundle_settings('node', 'article', $settings);
+  $info = entity_get_info('node');
+  foreach ($info['bundles'] as $key => $value) {
+    $settings = field_bundle_settings('node', $key);
+    $settings['view_modes']['stealourcontent_node']['custom_settings'] = TRUE;
+    field_bundle_settings('node', $key, $settings);
+  }
 }
 
 /**

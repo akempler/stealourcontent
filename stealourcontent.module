@@ -40,6 +40,8 @@ function stealourcontent_menu() {
 
 /**
  * Implements hook_entity_info_alter().
+ *
+ * Add our custom stealourcontent_node view mode.
  */
 function stealourcontent_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes'] += array(

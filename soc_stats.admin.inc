@@ -4,7 +4,12 @@
  * Display stats on embedded node views.
  */
 
-
+/**
+ * Display a page with stats in table format.
+ *
+ * @return string
+ *  The html for the page.
+ */
 function soc_stats() {
 
   drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/tablesorter/jquery.tablesorter.min.js', 'file');

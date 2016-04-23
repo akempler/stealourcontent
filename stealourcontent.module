@@ -124,6 +124,7 @@ function stealourcontent_block_save($delta = '', $edit = array()) {
     variable_set('soc_link_text', $edit['soc_link_text']);
     variable_set('soc_title', $edit['soc_title']);
     variable_set('soc_guidelines', $edit['soc_guidelines']);
+    variable_set('soc_guidelines_link', $edit['soc_guidelines_link']);
     variable_set('soc_instructions', $edit['soc_instructions']);
     variable_set('soc_branding', $edit['soc_branding']);
   }
@@ -247,6 +248,13 @@ function soc_settings_form($callby, &$form, $form_state = array(), $conf = array
     '#options' => $license_options,
     '#default_value' => variable_get('soc_license', 'cc-by-nd-4'),
     '#description' => t('Select a license for content reuse.'),
+  );
+
+  $form['soc_guidelines_link'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Additional Guidelines Link'),
+    '#description' => t('Optionally provide a link to page containing additional guidelines for republishing.'),
+    '#default_value' => variable_get('soc_guidelines_link', ''),
   );
 
 }

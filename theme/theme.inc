@@ -29,8 +29,22 @@ function template_preprocess_soc_modal_window(&$vars) {
 
   $vars['soc_title'] = variable_get('soc_title', stealourcontent_text('soc_title'));
   $vars['soc_guidelines'] = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
+
+  $guidelines_link = variable_get('soc_guidelines_link', '');
+  if (!empty($guidelines_link)) {
+    $absolute = FALSE;
+    if ((substr($link, 0, 7) == 'http://') || (substr($link, 0, 8) == 'https://')) {
+      $absolute = TRUE;
+      //$guidelines_link = url($guidelines_link, array('absolute' => $absolute));
+    }
+    $vars['soc_guidelines_link'] = l(t('View additional guideline details.'), $guidelines_link, array('absolute' => $absolute));
+  } else {
+    $vars['soc_guidelines_link'] = '';
+  }
+
   $vars['soc_instructions'] = variable_get('soc_instructions', stealourcontent_text('soc_instructions'));
   $vars['soc_tracking'] = variable_get('soc_tracking', 1);
+
   $branding = variable_get('soc_branding', stealourcontent_text('soc_branding'));
   $vars['soc_branding'] = token_replace($branding, array('node' => $vars['node']));
 

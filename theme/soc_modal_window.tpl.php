@@ -6,6 +6,8 @@
  * Available variables:
  *  $soc_guidelines
  *    Guidelines for republishing the content.
+ *  $soc_guidelines_link
+ *    Optional link to a page with additional guidelines.
  *  $soc_instructions
  *    Instructions for copying and pasting the content.
  *  $soc_branding
@@ -30,6 +32,11 @@
 
 <div id="soc_modal_wrapper">
   <p><?php print $soc_guidelines; ?></p>
+  <?php
+  if ($soc_guidelines_link):
+    print '<p>' . $soc_guidelines_link . '</p>';
+  endif;
+  ?>
   <div id="soc_license"><strong><?php print $soc_license; ?></strong></div>
   <textarea>
     <?php print $soc_rendered_node; ?>

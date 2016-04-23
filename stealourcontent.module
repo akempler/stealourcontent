@@ -287,7 +287,10 @@ function stealourcontent_theme() {
 function stealourcontent_preprocess_node(&$vars) {
 
   if($vars['view_mode'] == 'stealourcontent_node') {
-    $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__socmodal';
+    $vars['theme_hook_suggestions'][] = 'node__socmodal';
+    // If you want to provide a node type specific template use the format below.
+    // There is an example template in the theme directory.
+    // $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__socmodal';
   }
 }
 

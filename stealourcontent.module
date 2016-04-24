@@ -461,3 +461,59 @@ function get_referer_view_counts() {
 
   return $rows;
 }
+
+/**
+ * Attempt to determine which fields belonging to the specified node are
+ * image/file fields.
+ *
+ * @return array
+ *  An array of any node fields that contain files. Otherwise an empty array.
+ */
+function soc_get_file_fields($node) {
+
+  $files = array();
+
+  // Get the extra fields assigned to a node type.
+  $fields = field_info_instances('node', $node->type);
+
+  $file_fields = array();
+  foreach ($fields as $type => $info) {
+    // Assumption being made that this will identify a file/image field.
+    if (isset($info['settings']) && isset($info['settings']['file_directory'])) {
+      $file_fields[] = $type;
+    }
+  }
+
+  if (count($file_fields)) {
+    foreach ($file_fields as $field) {
+      // Because this doesn't work: $node->$field['und']
+      $info = $node->$field;
+      if (isset($node->$field) && isset($info['und'][0]['uri'])) {
+        $files[] = $info['und'][0]['uri'];
+      }
+    }
+  }
+
+  return $files;
+}
+
+/**
+ * Check if a set of files contain a private file.
+ *
+ * @param array $uris
+ *  An array of file uris.
+ *
+ *  @return bool
+ *    TRUE if there is at least one private file otherwise FALSE.
+ */
+function soc_private_files($uris) {
+
+  foreach ($uris as $uri) {
+    $scheme = file_uri_scheme($uri);
+    if ($scheme == 'private') {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}

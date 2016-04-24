@@ -67,4 +67,12 @@ function template_preprocess_soc_modal_window(&$vars) {
   $author_url = url('user/' . $vars['node']->uid, array('absolute' => TRUE));
   $vars['author'] = theme('username', array('account' => $account, 'link_path' => $author_url, 'link_options' => array('absolute' => TRUE)));
 
+  // If there are any private files, display an appropriate message.
+  $vars['soc_private_files'] = FALSE;
+  $files = soc_get_file_fields($vars['node']);
+  $private = soc_private_files($files);
+  if ($private) {
+    $vars['soc_private_files'] = TRUE;
+  }
+
 }

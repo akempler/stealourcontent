@@ -7,6 +7,12 @@ additional appended information such as a link back to the originating node,
 author information, and tracking capabilities to record view counts and 
 referer information.
 
+A custom view mode called "stealourcontent_node" is added. this is used to control 
+which fields are rendered for the modal. It is automtatically made available 
+to all node types. Use the view mode to control what fields are available. 
+You can then create custom templates for your specific fields targeting the 
+view mode to control how the content for your fields are rendered.
+
 A stats pages is providing showing the number of views for each node. 
 The sortable tables are handled by:
 http://tablesorter.com/docs/

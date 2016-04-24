@@ -23,6 +23,8 @@
  *    A themed image/link for the content license.
  *  $display_submitted
  *    TRUE if "Display author and date information" is checked for this content type.
+ *  $soc_private_files
+ *    TRUE if there are any private files, otherwise FALSE (only public files).
  *  $node
  *    Node object.
  *
@@ -40,11 +42,16 @@
   <div id="soc_license"><strong><?php print $soc_license; ?></strong></div>
   <textarea>
     <?php print $soc_rendered_node; ?>
-    <?php print $soc_branding; ?>
+    <p><?php print $soc_branding; ?></p>
     <?php if ($display_submitted): ?>
       <p><span class="submitted">Originally posted on <?php print date( "F j, Y", $node->created)?> by <?php print $author ?></span></p>
     <?php endif; ?>
     <?php print $soc_tracking_pixel; ?>
   </textarea>
   <p><?php print $soc_instructions; ?></p>
+  <?php
+  if ($soc_private_files):
+    print '<strong>' . t('Some files may not display correctly. These can be removed manually from the html') . '</strong>';
+  endif;
+  ?>
 </div>

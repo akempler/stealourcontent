@@ -437,7 +437,7 @@ function soc_load_stats() {
 function get_referer_view_counts() {
 
   $records = soc_load_stats();
-  //var_dump($records);
+
   $rows = array();
   if (count($records)) {
     $first_key = key($records);

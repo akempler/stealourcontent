@@ -8,7 +8,7 @@
  * Display a page with stats in table format.
  *
  * @return string
- *  The html for the page.
+ *   The html for the page.
  */
 function soc_stats() {
 
@@ -20,14 +20,13 @@ function soc_stats() {
   soc_load_stats();
   get_referer_view_counts();
 
-
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
   $header = array(
     'nid' => t('nid'),
     'title' => t('Title'),
     'referer' => t('Referer'),
-    'count' => t('Views')
+    'count' => t('Views'),
   );
 
   $records = get_referer_view_counts();
@@ -35,7 +34,7 @@ function soc_stats() {
 
   foreach ($records as $referer => $nids) {
     foreach ($nids as $nid => $count) {
-      $node = node_load((int)$nid);
+      $node = node_load((int) $nid);
       $rows[] = array(
         'nid' => l($nid, 'node/' . $nid),
         'title' => l(check_plain($node->title), 'node/' . $nid),

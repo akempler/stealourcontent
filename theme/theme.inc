@@ -2,7 +2,6 @@
 /**
  * @file
  * Theme preprocessors for the StealOurContent module.
- *
  */
 
 /**
@@ -16,7 +15,7 @@ function template_preprocess_soc_button(&$vars) {
     ctools_include('modal');
     ctools_modal_add_js();
 
-    // block config variables.
+    // Block config variables.
     $vars['soc_link_text'] = variable_get('soc_link_text', stealourcontent_text('soc_link_text'));
   }
 
@@ -35,10 +34,10 @@ function template_preprocess_soc_modal_window(&$vars) {
     $absolute = FALSE;
     if ((substr($link, 0, 7) == 'http://') || (substr($link, 0, 8) == 'https://')) {
       $absolute = TRUE;
-      //$guidelines_link = url($guidelines_link, array('absolute' => $absolute));
     }
     $vars['soc_guidelines_link'] = l(t('View additional guideline details.'), $guidelines_link, array('absolute' => $absolute));
-  } else {
+  }
+  else {
     $vars['soc_guidelines_link'] = '';
   }
 
@@ -53,7 +52,10 @@ function template_preprocess_soc_modal_window(&$vars) {
   $vars['soc_tracking_pixel'] = NULL;
   if ($vars['soc_tracking']) {
     global $base_url;
-    $vars['soc_tracking_pixel'] = theme('image', array('path' => $base_url . '/track.gif?nid=' . $vars['node']->nid, 'attributes' => array('height' => '1', 'width' => '1')));
+    $vars['soc_tracking_pixel'] = theme('image', array(
+        'path' => $base_url . '/track.gif?nid=' . $vars['node']->nid,
+        'attributes' => array('height' => '1', 'width' => '1'))
+        );
   }
 
   $licenses = soc_licenses();
@@ -65,7 +67,11 @@ function template_preprocess_soc_modal_window(&$vars) {
 
   $account = user_load($vars['node']->uid);
   $author_url = url('user/' . $vars['node']->uid, array('absolute' => TRUE));
-  $vars['author'] = theme('username', array('account' => $account, 'link_path' => $author_url, 'link_options' => array('absolute' => TRUE)));
+  $vars['author'] = theme('username', array(
+      'account' => $account,
+      'link_path' => $author_url,
+      'link_options' => array('absolute' => TRUE))
+      );
 
   // If there are any private files, display an appropriate message.
   $vars['soc_private_files'] = FALSE;

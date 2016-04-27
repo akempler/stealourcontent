@@ -90,5 +90,4 @@ function stealourcontent_uninstall() {
   variable_del('soc_branding');
   variable_del('soc_tracking');
 
-  // TODO Remove custom view mode.
 }

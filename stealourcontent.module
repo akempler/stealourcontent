@@ -61,7 +61,8 @@ function stealourcontent_entity_info_alter(&$entity_info) {
  * @param string $js
  * @param string $nid
  *
- * @return The content to be rendered.
+ * @return string
+ *   The content to be rendered.
  */
 function soc_modal_page($js = NULL, $nid = NULL) {
 
@@ -69,7 +70,6 @@ function soc_modal_page($js = NULL, $nid = NULL) {
     return t('Sorry, node not found.');
   }
 
-  // TODO check for $js = ajax?
   // See template_preprocess_soc_button()
   ctools_include('modal');
   ctools_include('ajax');
@@ -163,7 +163,8 @@ function soc_block() {
   $node = menu_get_object();
   if (($node) && node_access('view', $node, $user)) {
     $out = theme('soc_button', array('node' => $node));
-  } else {
+  }
+  else {
     $out = '';
   }
 
@@ -240,8 +241,7 @@ function soc_settings_form($callby, &$form, $form_state = array(), $conf = array
     $license_options[$key] = $info['title'];
   }
 
-  // TODO should provide preview with icon/link so description can be read.
-  //  Might be best to use their web integration.
+  // TODO Possibly provide preview with icon/link so description can be read.
   $form['soc_license'] = array(
     '#type' => 'select',
     '#title' => t('License'),
@@ -289,12 +289,10 @@ function stealourcontent_theme() {
 
 /**
  * Implements hook_preprocess_node().
- *
- * @todo provide more generic template hint for all socmodal node types.
  */
 function stealourcontent_preprocess_node(&$vars) {
 
-  if($vars['view_mode'] == 'stealourcontent_node') {
+  if ($vars['view_mode'] == 'stealourcontent_node') {
     $vars['theme_hook_suggestions'][] = 'node__socmodal';
     // If you want to provide a node type specific template use the format below.
     // There is an example template in the theme directory.
@@ -302,6 +300,10 @@ function stealourcontent_preprocess_node(&$vars) {
   }
 }
 
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
 function stealourcontent_theme_registry_alter(&$theme_registry) {
 
   $module_path = drupal_get_path('module', 'stealourcontent');
@@ -364,7 +366,7 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
  * Get the available licenses for content reuse.
  *
  * @return array
- *  An array of available licenses.
+ *   An array of available licenses.
  */
 function soc_licenses() {
 
@@ -373,8 +375,8 @@ function soc_licenses() {
     'cc-by-nd-4' => array(
       'title' => 'CC: Attribution-NoDerivatives',
       'link' => 'http://creativecommons.org/licenses/by-nd/4.0/',
-      'image' => $img_path . '/cc-by-nd-4.png'
-    )
+      'image' => $img_path . '/cc-by-nd-4.png',
+    ),
   );
 
   return $licenses;
@@ -387,18 +389,18 @@ function soc_licenses() {
 function soc_save_node_views() {
 
   $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'unknown';
-  //$ip = $_SERVER['REMOTE_ADDR'];
-  //$useragent = $_SERVER['HTTP_USER_AGENT'];
+  // $ip = $_SERVER['REMOTE_ADDR'];
+  // $useragent = $_SERVER['HTTP_USER_AGENT'];
   // Need browscap...
-  //$browser = get_browser(null, true);
+  // $browser = get_browser(null, true);
   $nid = isset($_GET['nid']) ? $_GET['nid'] : 0;
 
   db_insert('stealourcontent_stats')
   ->fields(array('nid', 'referer', 'created'))
   ->values(array(
-    'nid' => (int)$nid,
+    'nid' => (int) $nid,
     'referer' => filter_xss($referer),
-    'created' => REQUEST_TIME
+    'created' => REQUEST_TIME,
   ))
   ->execute();
 }
@@ -408,10 +410,10 @@ function soc_save_node_views() {
  * Load stats from the database.
  *
  * @return array
- *  An array of stealourcontent_stats records containing all fields.
- *  Grouped by referer, ordered by nid, referer.
+ *   An array of stealourcontent_stats records containing all fields.
+ *   Grouped by referer, ordered by nid, referer.
  *
- *  @todo For sites with large amount of shares we'll want paged results.
+ * @todo For sites with large amount of shares we might want paged results.
  */
 function soc_load_stats() {
 
@@ -431,8 +433,8 @@ function soc_load_stats() {
  * Get view counts per referer.
  *
  * @return array
- *  An array of stats indexed by referer. Each referer contains an associative
- *  array of nid => view count.
+ *   An array of stats indexed by referer. Each referer contains an associative
+ *   array of nid => view count.
  */
 function get_referer_view_counts() {
 
@@ -448,11 +450,11 @@ function get_referer_view_counts() {
     foreach ($records as $record) {
       if ($nid == $record->nid && $referer == $record->referer) {
         $count++;
-      } else {
+      }
+      else {
         $count = 1;
       }
       $rows[$record->referer][$record->nid] = $count;
-
 
       $nid = $record->nid;
       $referer = $record->referer;
@@ -463,11 +465,13 @@ function get_referer_view_counts() {
 }
 
 /**
- * Attempt to determine which fields belonging to the specified node are
+ * Find image/file fields.
+ *
+ * Attempts to determine which fields belonging to the specified node are
  * image/file fields.
  *
  * @return array
- *  An array of any node fields that contain files. Otherwise an empty array.
+ *   An array of any node fields that contain files. Otherwise an empty array.
  */
 function soc_get_file_fields($node) {
 
@@ -501,10 +505,10 @@ function soc_get_file_fields($node) {
  * Check if a set of files contain a private file.
  *
  * @param array $uris
- *  An array of file uris.
+ *   An array of file uris.
  *
- *  @return bool
- *    TRUE if there is at least one private file otherwise FALSE.
+ * @return bool
+ *   TRUE if there is at least one private file otherwise FALSE.
  */
 function soc_private_files($uris) {
 

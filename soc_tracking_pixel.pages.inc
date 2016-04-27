@@ -5,8 +5,11 @@
  */
 
 
+/**
+ * Provide a tracking pixel as a single pixel gif.
+ */
 function soc_tracking_pixel_gif() {
-  ignore_user_abort(true);
+  ignore_user_abort(TRUE);
 
   // Ensure the tracking pixel is always served by Drupal so the cookie is set.
   drupal_page_is_cacheable(FALSE);

@@ -72,7 +72,7 @@ function soc_modal_page($js = NULL, $nid = NULL) {
  * Implements hook_block_info().
  */
 function stealourcontent_block_info() {
-  $blocks['soc_block'] = array(
+  $blocks['stealourcontent_block'] = array(
     'info' => t('Republish Button'),
     'cache' => DRUPAL_CACHE_GLOBAL,
   );
@@ -84,8 +84,8 @@ function stealourcontent_block_info() {
  */
 function stealourcontent_block_configure($delta = '') {
   $form = array();
-  if ($delta == 'soc_block') {
-    soc_settings_form('block', $form);
+  if ($delta == 'stealourcontent_block') {
+    stealourcontent_settings_form($form);
   }
   return $form;
 }
@@ -94,7 +94,7 @@ function stealourcontent_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function stealourcontent_block_save($delta = '', $edit = array()) {
-  if ($delta == 'soc_block') {
+  if ($delta == 'stealourcontent_block') {
     variable_set('soc_link_text', $edit['soc_link_text']);
     variable_set('soc_title', $edit['soc_title']);
     variable_set('soc_guidelines', $edit['soc_guidelines']);
@@ -110,10 +110,10 @@ function stealourcontent_block_save($delta = '', $edit = array()) {
 function stealourcontent_block_view($delta = '') {
   $block = array();
   switch ($delta) {
-    case 'soc_block':
+    case 'stealourcontent_block':
       $block['subject'] = '';
       $block['content'] = array(
-        '#markup' => soc_block(),
+        '#markup' => stealourcontent_block(),
         '#attached' => array('css' => array(drupal_get_path('module', 'stealourcontent') . '/css/stealourcontent.css')),
       );
 
@@ -128,7 +128,7 @@ function stealourcontent_block_view($delta = '') {
  * @return string
  *   The html to be displayed.
  */
-function soc_block() {
+function stealourcontent_block() {
 
   global $user;
 
@@ -147,22 +147,9 @@ function soc_block() {
 
 
 /**
- * Implements hook_form().
+ * Builds Settings Form for the StealOurContent Bock.
  */
-function stealourcontent_form($form, &$form_state) {
-  // Getting available contexts from menu.
-  $context = menu_get_object();
-  if (!($context && isset($context->nid))) {
-    return NULL;
-  }
-  _republish_content_form('block', $context, $form, $form_state);
-  return $form;
-}
-
-/**
- * Builds Settings Form.
- */
-function soc_settings_form($callby, &$form, $form_state = array(), $conf = array()) {
+function stealourcontent_settings_form(&$form, $form_state = array(), $conf = array()) {
   $form['soc_link_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Republish Link Text'),

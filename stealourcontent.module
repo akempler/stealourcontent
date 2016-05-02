@@ -4,6 +4,8 @@
  * Contains block, theme, and hooks for StealOurContent module.
  */
 
+define('DEFAULT_LICENSE', 'cc-by-nd-4');
+
 
 /**
  * Implements hook_menu().
@@ -94,6 +96,7 @@ function stealourcontent_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function stealourcontent_block_save($delta = '', $edit = array()) {
+
   if ($delta == 'stealourcontent_block') {
     variable_set('soc_link_text', $edit['soc_link_text']);
     variable_set('soc_title', $edit['soc_title']);
@@ -101,6 +104,7 @@ function stealourcontent_block_save($delta = '', $edit = array()) {
     variable_set('soc_guidelines_link', $edit['soc_guidelines_link']);
     variable_set('soc_instructions', $edit['soc_instructions']);
     variable_set('soc_branding', $edit['soc_branding']);
+    variable_set('soc_license', $edit['soc_license']);
   }
 }
 
@@ -154,31 +158,31 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     '#type' => 'textfield',
     '#title' => t('Republish Link Text'),
     '#description' => t('Enter text to be displayed on the Republish button.'),
-    '#default_value' => stealourcontent_text('soc_link_text'),
+    '#default_value' => variable_get('soc_link_text', stealourcontent_text('soc_link_text')),
   );
   $form['soc_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Republish Box Title'),
     '#description' => t('Enter the title for Republish popup box.'),
-    '#default_value' => stealourcontent_text('soc_title'),
+    '#default_value' => variable_get('soc_title', stealourcontent_text('soc_title')),
   );
   $form['soc_guidelines'] = array(
     '#type' => 'textarea',
     '#title' => t('Republish Guidelines'),
     '#description' => t('Enter a descriptive guideline to be displayed on the Republish popup box above the main body. Supports Filtered HTML format.'),
-    '#default_value' => stealourcontent_text('soc_guidelines', NULL, FALSE),
+    '#default_value' => variable_get('soc_guidelines', stealourcontent_text('soc_guidelines', NULL, FALSE)),
   );
   $form['soc_instructions'] = array(
     '#type' => 'textarea',
     '#title' => t('Republish Instructions'),
     '#description' => t('Enter instructions to be displayed on the Republish overlay box below the main body.'),
-    '#default_value' => stealourcontent_text('soc_instructions'),
+    '#default_value' => variable_get('soc_instructions', stealourcontent_text('soc_instructions')),
   );
   $form['soc_branding'] = array(
     '#type' => 'textarea',
     '#title' => t('Branding Text'),
     '#description' => t('Enter the Branding text to be included in editor.'),
-    '#default_value' => stealourcontent_text('soc_branding', NULL, FALSE),
+    '#default_value' => variable_get('soc_branding', stealourcontent_text('soc_branding', NULL, FALSE)),
   );
 
   if (module_exists("token")) {
@@ -189,18 +193,17 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     );
   }
 
-  $licenses = soc_licenses();
+  $licenses = stealourcontent_licenses();
   $license_options = array();
   foreach ($licenses as $key => $info) {
     $license_options[$key] = $info['title'];
   }
 
-  // TODO Possibly provide preview with icon/link so description can be read.
   $form['soc_license'] = array(
     '#type' => 'select',
     '#title' => t('License'),
     '#options' => $license_options,
-    '#default_value' => variable_get('soc_license', 'cc-by-nd-4'),
+    '#default_value' => variable_get('soc_license', DEFAULT_LICENSE),
     '#description' => t('Select a license for content reuse.'),
   );
 
@@ -324,12 +327,22 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
  * @return array
  *   An array of available licenses.
  */
-function soc_licenses() {
+function stealourcontent_licenses() {
 
   $img_path = drupal_get_path('module', 'stealourcontent') . '/images';
   $licenses = array(
+    'cc0' => array(
+      'title' => 'CC: Public Domain',
+      'link' => 'https://creativecommons.org/publicdomain/zero/1.0/',
+      'image' => $img_path . '/cc0.png',
+    ),
+    'cc-by-4' => array(
+      'title' => 'CC: Attribution',
+      'link' => 'https://creativecommons.org/licenses/by/4.0/',
+      'image' => $img_path . '/cc-by-4.png',
+    ),
     'cc-by-nd-4' => array(
-      'title' => 'CC: Attribution-NoDerivatives',
+      'title' => 'CC: Attribution - No Derivatives',
       'link' => 'http://creativecommons.org/licenses/by-nd/4.0/',
       'image' => $img_path . '/cc-by-nd-4.png',
     ),

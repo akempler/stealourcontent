@@ -56,13 +56,13 @@ function template_preprocess_soc_modal_window(&$vars) {
   if ($vars['soc_tracking']) {
     global $base_url;
     $vars['soc_tracking_pixel'] = theme('image', array(
-        'path' => $base_url . '/track.gif?nid=' . $vars['node']->nid,
+        'path' => $base_url . '/stealourcontent/track.gif?nid=' . $vars['node']->nid,
         'attributes' => array('height' => '1', 'width' => '1'))
         );
   }
 
-  $licenses = soc_licenses();
-  $license = variable_get('soc_license', 'cc-by-nd-4');
+  $licenses = stealourcontent_licenses();
+  $license = variable_get('soc_license', DEFAULT_LICENSE);
   $image = theme('image', array('path' => $licenses[$license]['image'], 'alt' => 'License'));
   $vars['soc_license'] = l($image, $licenses[$license]['link'], array('html' => TRUE));
 

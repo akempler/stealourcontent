@@ -20,7 +20,7 @@ function stealourcontent_stats_menu() {
     'file' => 'stealourcontent_stats.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['track.gif'] = array(
+  $items['stealourcontent/track.gif'] = array(
     'page callback' => 'stealourcontent_tracking_pixel_gif',
     'file' => 'stealourcontent_tracking_pixel.pages.inc',
     'access arguments' => array('access content'),

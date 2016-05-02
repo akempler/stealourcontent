@@ -1,0 +1,5 @@
+name = StealOurContent Stats
+description = Provide stats collection for the StealOurContent module.
+core = 7.x
+
+dependencies[] = stealourcontent

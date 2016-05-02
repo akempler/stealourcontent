@@ -1,0 +1,129 @@
+<?php
+/**
+ * @file
+ * Contains block, theme, and hooks for StealOurContent Stats module.
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function stealourcontent_stats_menu() {
+
+  $items = array();
+
+  $items['admin/reports/stealourcontent'] = array(
+    'title' => 'StealOurContent Stats',
+    'description' => 'Number of views for republished content.',
+    'page callback' => 'soc_stats',
+    'access arguments' => array('administer stealourcontent'),
+    'file' => 'soc_stats.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['track.gif'] = array(
+    'page callback' => 'soc_tracking_pixel_gif',
+    'file' => 'soc_tracking_pixel.pages.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_permission().
+ */
+function stealourcontent_permission() {
+  return array(
+    'administer stealourcontent' => array(
+      'title' => t('Administer the StealOurContent module'),
+      'description' => t('Access the StealOurContent analytics reports.'),
+    ),
+  );
+}
+
+
+
+
+/**
+ * Record the remote node views.
+ */
+function soc_save_node_views() {
+
+  $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'unknown';
+  // $ip = $_SERVER['REMOTE_ADDR'];
+  // $useragent = $_SERVER['HTTP_USER_AGENT'];
+  // Need browscap...
+  // $browser = get_browser(null, true);
+  $nid = isset($_GET['nid']) ? $_GET['nid'] : 0;
+
+  db_insert('stealourcontent_stats')
+  ->fields(array('nid', 'referer', 'created'))
+  ->values(array(
+    'nid' => (int) $nid,
+    'referer' => filter_xss($referer),
+    'created' => REQUEST_TIME,
+  ))
+  ->execute();
+}
+
+
+/**
+ * Load stats from the database.
+ *
+ * @return array
+ *   An array of stealourcontent_stats records containing all fields.
+ *   Grouped by referer, ordered by nid, referer.
+ *
+ * @todo For sites with large amount of shares we might want paged results.
+ */
+function soc_load_stats() {
+
+  $stats = array();
+
+  $result = db_select('stealourcontent_stats', 'stats')
+  ->fields('stats')
+  ->orderBy('stats.referer', 'ASC')
+  ->orderBy('stats.nid', 'DESC')
+  ->execute()
+  ->fetchAll();
+
+  return $result;
+}
+
+/**
+ * Get view counts per referer.
+ *
+ * @return array
+ *   An array of stats indexed by referer. Each referer contains an associative
+ *   array of nid => view count.
+ */
+function soc_get_referer_view_counts() {
+
+  $records = soc_load_stats();
+
+  $rows = array();
+  if (count($records)) {
+    $first_key = key($records);
+    $nid = $records[$first_key]->nid;
+    $referer = $records[$first_key]->referer;
+    $counts = array();
+    $count = 0;
+    foreach ($records as $record) {
+      if ($nid == $record->nid && $referer == $record->referer) {
+        $count++;
+      }
+      else {
+        $count = 1;
+      }
+      $rows[$record->referer][$record->nid] = $count;
+
+      $nid = $record->nid;
+      $referer = $record->referer;
+    }
+  }
+
+  return $rows;
+}
+

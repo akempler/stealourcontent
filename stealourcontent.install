@@ -4,56 +4,11 @@
  * Install, update, and uninstall functions for the StealOurContent module.
  */
 
-/**
- * Implements hook_schema().
- */
-function stealourcontent_schema() {
-
-  $schema['stealourcontent_stats'] = array(
-    'description' => 'View stats for embedded nodes.',
-    'fields' => array(
-      'sid' => array(
-        'description' => 'The unique record id.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'nid' => array(
-        'description' => 'The {node}.nid of the node created from the note.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => '0',
-      ),
-      'referer' => array(
-        'description' => 'The referer url.',
-        'type' => 'varchar',
-        'length' => '250',
-        'default' => '',
-      ),
-      'created' => array(
-        'description' => 'The Unix timestamp when the stat was recorded.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('sid'),
-    'indexes' => array(
-      'nid' => array('nid'),
-      'referer' => array('referer'),
-      'created' => array('created'),
-    ),
-  );
-
-  return $schema;
-}
-
 
 /**
  * Implements hook_install().
  */
-function stealourcontent_install() {
+function stealourcontent_stats_install() {
 
   $info = entity_get_info('node');
   foreach ($info['bundles'] as $bundle => $value) {
@@ -74,8 +29,6 @@ function stealourcontent_install() {
     );
     field_update_instance($instance);
   }
-
-
 }
 
 /**
@@ -88,6 +41,4 @@ function stealourcontent_uninstall() {
   variable_del('soc_guidelines');
   variable_del('soc_instructions');
   variable_del('soc_branding');
-  variable_del('soc_tracking');
-
 }

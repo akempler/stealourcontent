@@ -15,14 +15,14 @@ function stealourcontent_stats_menu() {
   $items['admin/reports/stealourcontent'] = array(
     'title' => 'StealOurContent Stats',
     'description' => 'Number of views for republished content.',
-    'page callback' => 'soc_stats',
+    'page callback' => 'stealourcontent_stats',
     'access arguments' => array('administer stealourcontent'),
-    'file' => 'soc_stats.admin.inc',
+    'file' => 'stealourcontent_stats.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
   $items['track.gif'] = array(
-    'page callback' => 'soc_tracking_pixel_gif',
-    'file' => 'soc_tracking_pixel.pages.inc',
+    'page callback' => 'stealourcontent_tracking_pixel_gif',
+    'file' => 'stealourcontent_tracking_pixel.pages.inc',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -49,7 +49,7 @@ function stealourcontent_permission() {
 /**
  * Record the remote node views.
  */
-function soc_save_node_views() {
+function stealourcontent_save_node_views() {
 
   $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'unknown';
   // $ip = $_SERVER['REMOTE_ADDR'];
@@ -78,7 +78,7 @@ function soc_save_node_views() {
  *
  * @todo For sites with large amount of shares we might want paged results.
  */
-function soc_load_stats() {
+function stealourcontent_load_stats() {
 
   $stats = array();
 
@@ -99,9 +99,9 @@ function soc_load_stats() {
  *   An array of stats indexed by referer. Each referer contains an associative
  *   array of nid => view count.
  */
-function soc_get_referer_view_counts() {
+function stealourcontent_get_referer_view_counts() {
 
-  $records = soc_load_stats();
+  $records = stealourcontent_load_stats();
 
   $rows = array();
   if (count($records)) {

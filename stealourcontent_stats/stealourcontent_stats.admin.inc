@@ -12,13 +12,13 @@
  */
 function stealourcontent_stats() {
 
-  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/tablesorter/jquery.tablesorter.min.js', 'file');
-  drupal_add_js(drupal_get_path('module', 'stealourcontent') . '/js/soc_stats.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'stealourcontent_stats') . '/js/tablesorter/jquery.tablesorter.min.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'stealourcontent_stats') . '/js/soc_stats.js', 'file');
 
-  drupal_add_css(drupal_get_path('module', 'stealourcontent') . '/js/tablesorter/themes/blue/tablesorter.css');
+  drupal_add_css(drupal_get_path('module', 'stealourcontent_stats') . '/js/tablesorter/themes/blue/tablesorter.css');
 
   stealourcontent_load_stats();
-  get_referer_view_counts();
+  //get_referer_view_counts();
 
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
@@ -29,7 +29,7 @@ function stealourcontent_stats() {
     'count' => t('Views'),
   );
 
-  $records = get_referer_view_counts();
+  $records = stealourcontent_get_referer_view_counts();
   $rows = array();
 
   foreach ($records as $referer => $nids) {

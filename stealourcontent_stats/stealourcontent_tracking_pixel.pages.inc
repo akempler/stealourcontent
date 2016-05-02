@@ -8,7 +8,7 @@
 /**
  * Provide a tracking pixel as a single pixel gif.
  */
-function soc_tracking_pixel_gif() {
+function stealourcontent_tracking_pixel_gif() {
   ignore_user_abort(TRUE);
 
   // Ensure the tracking pixel is always served by Drupal so the cookie is set.
@@ -35,7 +35,7 @@ function soc_tracking_pixel_gif() {
   ob_end_flush();
 
   // Save the view to the db.
-  soc_save_node_views();
+  stealourcontent_save_node_views();
 
   drupal_exit();
 }

@@ -46,7 +46,11 @@
     <?php if ($display_submitted): ?>
       <p><span class="submitted">Originally posted on <?php print date( "F j, Y", $node->created)?> by <?php print $author ?></span></p>
     <?php endif; ?>
-    <?php print $soc_tracking_pixel; ?>
+    <?php
+      if (module_exists('stealourcontent_stats')) {
+        print $soc_tracking_pixel;
+      }
+    ?>
   </textarea>
   <p><?php print $soc_instructions; ?></p>
   <?php

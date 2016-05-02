@@ -27,7 +27,10 @@ function template_preprocess_soc_button(&$vars) {
 function template_preprocess_soc_modal_window(&$vars) {
 
   $vars['soc_title'] = variable_get('soc_title', stealourcontent_text('soc_title'));
-  $vars['soc_guidelines'] = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
+
+  //$vars['soc_guidelines'] = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
+  $guidelines = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
+  $vars['soc_guidelines'] = token_replace($guidelines);
 
   $guidelines_link = variable_get('soc_guidelines_link', '');
   if (!empty($guidelines_link)) {

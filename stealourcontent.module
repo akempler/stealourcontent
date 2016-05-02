@@ -166,7 +166,7 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     '#type' => 'textarea',
     '#title' => t('Republish Guidelines'),
     '#description' => t('Enter a descriptive guideline to be displayed on the Republish popup box above the main body. Supports Filtered HTML format.'),
-    '#default_value' => stealourcontent_text('soc_guidelines'),
+    '#default_value' => stealourcontent_text('soc_guidelines', NULL, FALSE),
   );
   $form['soc_instructions'] = array(
     '#type' => 'textarea',
@@ -297,7 +297,7 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
       break;
 
     case 'soc_guidelines':
-      $text = t('Like this content? Republish it. But please do not edit the piece. Also make sure that you attribute the author, and mention the article was originally published on %sitename', array('%sitename' => variable_get('site_name', 'this site')), array('langcode' => $langcode));
+      $text = t('Like this content? Republish it. But please do not edit the piece. Also make sure that you attribute the author, and mention the article was originally published on [site:name].', array(), array('langcode' => $langcode));
       break;
 
     case 'soc_instructions':

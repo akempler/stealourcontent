@@ -34,7 +34,7 @@ function template_preprocess_soc_modal_window(&$vars) {
   $guidelines_link = variable_get('soc_guidelines_link', '');
   if (!empty($guidelines_link)) {
     $absolute = FALSE;
-    if ((substr($link, 0, 7) == 'http://') || (substr($link, 0, 8) == 'https://')) {
+    if ((substr($guidelines_link, 0, 7) == 'http://') || (substr($guidelines_link, 0, 8) == 'https://')) {
       $absolute = TRUE;
     }
     $vars['soc_guidelines_link'] = l(t('View additional guideline details.'), $guidelines_link, array('absolute' => $absolute));
@@ -48,7 +48,9 @@ function template_preprocess_soc_modal_window(&$vars) {
   $branding = variable_get('soc_branding', stealourcontent_text('soc_branding'));
   $vars['soc_branding'] = token_replace($branding, array('node' => $vars['node']));
 
-  $rendered_node = render(node_view($vars['node'], 'stealourcontent_node', NULL));
+  $nodeview = node_view($vars['node'], 'stealourcontent_node', NULL);
+  $rendered_node = render($nodeview);
+
   // Convert relative urls to absolute.
   $vars['soc_rendered_node'] = soc_rel_to_abs($rendered_node);
 

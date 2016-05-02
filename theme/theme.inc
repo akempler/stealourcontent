@@ -50,7 +50,9 @@ function template_preprocess_soc_modal_window(&$vars) {
   $branding = variable_get('soc_branding', stealourcontent_text('soc_branding'));
   $vars['soc_branding'] = token_replace($branding, array('node' => $vars['node']));
 
-  $vars['soc_rendered_node'] = render(node_view($vars['node'], 'stealourcontent_node', NULL));
+  $rendered_node = render(node_view($vars['node'], 'stealourcontent_node', NULL));
+  // Convert relative urls to absolute.
+  $vars['soc_rendered_node'] = soc_rel_to_abs($rendered_node);
 
   $vars['soc_tracking_pixel'] = NULL;
   if ($vars['soc_tracking']) {

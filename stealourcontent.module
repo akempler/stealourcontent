@@ -415,3 +415,71 @@ function soc_private_files($uris) {
 
   return FALSE;
 }
+
+
+/**
+ * Convert relative to absolute urls.
+ *
+ * Code from https://www.drupal.org/project/rel_to_abs
+ *
+ * @param string $text
+ *   The text/html to convert.
+ *
+ * @return string
+ *   The text with any relative urls converted to absolute.
+ */
+function soc_rel_to_abs($text) {
+  $lang = language_default();
+  $front = url('<front>', array(
+      'absolute' => TRUE,
+      'language' => $lang
+  ));
+  $base_url = $front;
+  $text = soc_absolute_url($text, $base_url);
+  return $text;
+}
+
+/**
+ * Convert relative to absolute urls.
+ *
+ * Code from https://www.drupal.org/project/rel_to_abs
+ *
+ * @param string $txt
+ *   The text/html to convert.
+ *
+ * @param string $base_url
+ *   The base url to use in replacements.
+ *
+ * @return string
+ *   The text with any relative urls converted to absolute.
+ */
+function soc_absolute_url($txt, $base_url) {
+  $needles = array('href="', 'src="', 'background="');
+  $new_txt = '';
+  if (substr($base_url, -1) != '/') {
+    $base_url .= '/';
+  }
+  $new_base_url = $base_url;
+  $base_url_parts = parse_url($base_url);
+
+  foreach ($needles as $needle) {
+    while ($pos = strpos($txt, $needle)) {
+      $pos += strlen($needle);
+      if (substr($txt, $pos, 7) != 'http://' && substr($txt, $pos, 8) != 'https://' && substr($txt, $pos, 6) != 'ftp://' && substr($txt, $pos, 7) != 'mailto:' && substr($txt, $pos, 2) != '//' && substr($txt, $pos, 1) != '#') {
+        // If the relative url starts with a slash remove it.
+        if ($txt[$pos] == '/' || $txt[$pos] == '\\') {
+          $txt = substr_replace($txt, '', $pos, 1);
+        }
+        $new_txt .= substr($txt, 0, $pos) . $new_base_url;
+      }
+      else {
+        $new_txt .= substr($txt, 0, $pos);
+      }
+      $txt = substr($txt, $pos);
+    }
+    $txt = $new_txt . $txt;
+    $new_txt = '';
+  }
+  return $txt;
+}
+

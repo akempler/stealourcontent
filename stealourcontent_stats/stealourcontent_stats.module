@@ -34,7 +34,7 @@ function stealourcontent_stats_menu() {
 /**
  * Implements hook_permission().
  */
-function stealourcontent_permission() {
+function stealourcontent_stats_permission() {
   return array(
     'administer stealourcontent' => array(
       'title' => t('Administer the StealOurContent module'),
@@ -42,8 +42,6 @@ function stealourcontent_permission() {
     ),
   );
 }
-
-
 
 
 /**
@@ -126,4 +124,3 @@ function stealourcontent_get_referer_view_counts() {
 
   return $rows;
 }
-

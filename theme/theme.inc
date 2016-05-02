@@ -28,7 +28,6 @@ function template_preprocess_soc_modal_window(&$vars) {
 
   $vars['soc_title'] = variable_get('soc_title', stealourcontent_text('soc_title'));
 
-  //$vars['soc_guidelines'] = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
   $guidelines = variable_get('soc_guidelines', stealourcontent_text('soc_guidelines'));
   $vars['soc_guidelines'] = token_replace($guidelines);
 
@@ -45,7 +44,6 @@ function template_preprocess_soc_modal_window(&$vars) {
   }
 
   $vars['soc_instructions'] = variable_get('soc_instructions', stealourcontent_text('soc_instructions'));
-  $vars['soc_tracking'] = variable_get('soc_tracking', 1);
 
   $branding = variable_get('soc_branding', stealourcontent_text('soc_branding'));
   $vars['soc_branding'] = token_replace($branding, array('node' => $vars['node']));
@@ -55,12 +53,12 @@ function template_preprocess_soc_modal_window(&$vars) {
   $vars['soc_rendered_node'] = soc_rel_to_abs($rendered_node);
 
   $vars['soc_tracking_pixel'] = NULL;
-  if ($vars['soc_tracking']) {
+  if (module_exists('stealourcontent_stats')) {
     global $base_url;
     $vars['soc_tracking_pixel'] = theme('image', array(
         'path' => $base_url . '/stealourcontent/track.gif?nid=' . $vars['node']->nid,
         'attributes' => array('height' => '1', 'width' => '1'))
-        );
+    );
   }
 
   // Use theme function so the license can be manually overridden.
@@ -90,12 +88,13 @@ function template_preprocess_soc_modal_window(&$vars) {
 /**
  * Theme preprocessor for soc_license.tpl.php.
  *
- * Override this function to manually display a different license.
+ * Override this function or the template
+ * to manually display a different license.
  */
 function template_preprocess_soc_license(&$vars) {
 
   $licenses = stealourcontent_licenses();
-  $license = variable_get('soc_license', DEFAULT_LICENSE);
+  $license = variable_get('soc_license', STEALOURCONTENT_DEFAULT_LICENSE);
   $image = theme('image', array('path' => $licenses[$license]['image'], 'alt' => 'License'));
   $vars['soc_license_link'] = l($image, $licenses[$license]['link'], array('html' => TRUE, 'attributes' => array('target' => '_blank')));
 }

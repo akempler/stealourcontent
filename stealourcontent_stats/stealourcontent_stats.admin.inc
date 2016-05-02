@@ -18,7 +18,6 @@ function stealourcontent_stats() {
   drupal_add_css(drupal_get_path('module', 'stealourcontent_stats') . '/js/tablesorter/themes/blue/tablesorter.css');
 
   stealourcontent_load_stats();
-  //get_referer_view_counts();
 
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
@@ -44,7 +43,11 @@ function stealourcontent_stats() {
     }
   }
 
-  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'soc_stats_table', 'class' => array('tablesorter'))));
+  $output .= theme('table', array(
+    'header' => $header, 'rows' => $rows, 'attributes' => array(
+      'id' => 'soc_stats_table',
+      'class' => array('tablesorter'),
+    )));
 
   return $output;
 }

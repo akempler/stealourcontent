@@ -20,8 +20,8 @@ print l(check_plain($soc_link_text), "stealourcontent/nojs/" . $node->nid, array
     "class" => array(
       "ctools-use-modal",
       "soc_button"
-      )
-    )
+      ),
+    ),
   )
 );
 ?>

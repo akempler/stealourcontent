@@ -4,7 +4,7 @@
  * Contains block, theme, and hooks for StealOurContent module.
  */
 
-define('DEFAULT_LICENSE', 'cc-by-nd-4');
+define('STEALOURCONTENT_DEFAULT_LICENSE', 'cc-by-nd-4');
 
 
 /**
@@ -17,7 +17,7 @@ function stealourcontent_menu() {
   $items['stealourcontent/%ctools_js/%'] = array(
     'title' => 'Steal Our Content',
     'page arguments' => array(1, 2),
-    'page callback' => 'soc_modal_page',
+    'page callback' => 'stealourcontent_modal_page',
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM,
   );
@@ -47,12 +47,15 @@ function stealourcontent_entity_info_alter(&$entity_info) {
  * Menu callback to generate the republish popup/modal.
  *
  * @param string $js
+ *   'ajax' if js is available.
+ *
  * @param string $nid
+ *   The node nid being viewed in the modal.
  *
  * @return string
  *   The content to be rendered.
  */
-function soc_modal_page($js = NULL, $nid = NULL) {
+function stealourcontent_modal_page($js = NULL, $nid = NULL) {
 
   if ($nid == NULL) {
     return t('Sorry, node not found.');
@@ -193,6 +196,8 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     );
   }
 
+  // You can override and display a custom license via the theme layer.
+  // @see template_preprocess_soc_license().
   $licenses = stealourcontent_licenses();
   $license_options = array();
   foreach ($licenses as $key => $info) {
@@ -203,8 +208,7 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     '#type' => 'select',
     '#title' => t('License'),
     '#options' => $license_options,
-    //'#options' => theme('soc_license_options', $license_options),
-    '#default_value' => variable_get('soc_license', DEFAULT_LICENSE),
+    '#default_value' => variable_get('soc_license', STEALOURCONTENT_DEFAULT_LICENSE),
     '#description' => t('Select a license for content reuse.'),
   );
 
@@ -330,6 +334,10 @@ function stealourcontent_text($key, $language = NULL, $replace = TRUE, $node = a
 /**
  * Get the available licenses for content reuse.
  *
+ * NOTE: You can manually override and display your own custom license
+ *   via the theme layer.
+ * @see template_preprocess_soc_license()
+ *
  * @return array
  *   An array of available licenses.
  */
@@ -432,7 +440,7 @@ function soc_rel_to_abs($text) {
   $lang = language_default();
   $front = url('<front>', array(
       'absolute' => TRUE,
-      'language' => $lang
+      'language' => $lang,
   ));
   $base_url = $front;
   $text = soc_absolute_url($text, $base_url);
@@ -482,4 +490,3 @@ function soc_absolute_url($txt, $base_url) {
   }
   return $txt;
 }
-

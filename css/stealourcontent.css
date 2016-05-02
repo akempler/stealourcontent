@@ -27,6 +27,7 @@ a.soc_button:hover {
 #soc_modal_wrapper {
   position: relative;
 }
+
 #soc_modal_wrapper textarea {
   width: 80%;
   height: 400px;
@@ -40,6 +41,7 @@ a.soc_button:hover {
   width: 88px;
   padding-left: 6px;
 }
+
 #modalContent a.close img {
   margin-left: 10px;
 }

@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function stealourcontent_stats_install() {
+function stealourcontent_install() {
 
   $info = entity_get_info('node');
   foreach ($info['bundles'] as $bundle => $value) {
@@ -27,7 +27,10 @@ function stealourcontent_stats_install() {
         'weight' => -4,
         'settings' => array(),
     );
-    field_update_instance($instance);
+    // Making assumption that if the widget is present the field exists.
+    if ( ($instance) && !is_null($instance) && isset($instance['widget'])) {
+      field_update_instance($instance);
+    }
   }
 }
 

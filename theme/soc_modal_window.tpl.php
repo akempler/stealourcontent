@@ -34,7 +34,8 @@
 
 <div id="soc_modal_wrapper">
   <div id="soc_guidelines">
-    <div id="soc_license"><?php print $soc_license; ?></div>
+    <?php print $soc_license; ?>
+
     <p><?php print $soc_guidelines; ?></p>
     <?php
     if ($soc_guidelines_link):

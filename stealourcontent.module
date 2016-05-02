@@ -203,6 +203,7 @@ function stealourcontent_settings_form(&$form, $form_state = array(), $conf = ar
     '#type' => 'select',
     '#title' => t('License'),
     '#options' => $license_options,
+    //'#options' => theme('soc_license_options', $license_options),
     '#default_value' => variable_get('soc_license', DEFAULT_LICENSE),
     '#description' => t('Select a license for content reuse.'),
   );
@@ -239,6 +240,11 @@ function stealourcontent_theme() {
       'variables' => array(
         'node' => NULL,
       ),
+    ),
+    'soc_license' => array(
+      'template' => 'soc_license',
+      'file' => 'theme.inc',
+      'path' => $path . '/theme',
     ),
   );
 }

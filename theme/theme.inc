@@ -61,10 +61,8 @@ function template_preprocess_soc_modal_window(&$vars) {
         );
   }
 
-  $licenses = stealourcontent_licenses();
-  $license = variable_get('soc_license', DEFAULT_LICENSE);
-  $image = theme('image', array('path' => $licenses[$license]['image'], 'alt' => 'License'));
-  $vars['soc_license'] = l($image, $licenses[$license]['link'], array('html' => TRUE));
+  // Use theme function so the license can be manually overridden.
+  $vars['soc_license'] = theme('soc_license');
 
   $vars['display_submitted'] = variable_get('node_submitted_' . $vars['node']->type, TRUE);
 
@@ -85,3 +83,18 @@ function template_preprocess_soc_modal_window(&$vars) {
   }
 
 }
+
+
+/**
+ * Theme preprocessor for soc_license.tpl.php.
+ *
+ * Override this function to manually display a different license.
+ */
+function template_preprocess_soc_license(&$vars) {
+
+  $licenses = stealourcontent_licenses();
+  $license = variable_get('soc_license', DEFAULT_LICENSE);
+  $image = theme('image', array('path' => $licenses[$license]['image'], 'alt' => 'License'));
+  $vars['soc_license_link'] = l($image, $licenses[$license]['link'], array('html' => TRUE, 'attributes' => array('target' => '_blank')));
+}
+

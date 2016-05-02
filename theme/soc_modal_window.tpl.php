@@ -33,13 +33,16 @@
 ?>
 
 <div id="soc_modal_wrapper">
-  <p><?php print $soc_guidelines; ?></p>
-  <?php
-  if ($soc_guidelines_link):
-    print '<p>' . $soc_guidelines_link . '</p>';
-  endif;
-  ?>
-  <div id="soc_license"><strong><?php print $soc_license; ?></strong></div>
+  <div id="soc_guidelines">
+    <div id="soc_license"><?php print $soc_license; ?></div>
+    <p><?php print $soc_guidelines; ?></p>
+    <?php
+    if ($soc_guidelines_link):
+      print '<p>' . $soc_guidelines_link . '</p>';
+    endif;
+    ?>
+  </div>
+
   <textarea>
     <?php print $soc_rendered_node; ?>
     <p><?php print $soc_branding; ?></p>
@@ -52,6 +55,7 @@
       }
     ?>
   </textarea>
+
   <p><?php print $soc_instructions; ?></p>
   <?php
   if ($soc_private_files):

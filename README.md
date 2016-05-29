@@ -13,9 +13,6 @@ to all node types. Use the view mode to control what fields are available.
 You can then create custom templates for your specific fields targeting the 
 view mode to control how the content for your fields are rendered.
 
-A stats pages is providing showing the number of views for each node. 
-The sortable tables are handled by:
-http://tablesorter.com/docs/
-NOTE: the tablesorter themes' style.css must be renamed to something else to 
-work, for example, tablesorter.css, and then included.
+A stats pages is providing showing the number of views for each node at:
+admin/reports/stealourcontent
 

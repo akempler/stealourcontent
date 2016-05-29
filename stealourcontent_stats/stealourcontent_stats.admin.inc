@@ -12,42 +12,33 @@
  */
 function stealourcontent_stats() {
 
-  drupal_add_js(drupal_get_path('module', 'stealourcontent_stats') . '/js/tablesorter/jquery.tablesorter.min.js', 'file');
-  drupal_add_js(drupal_get_path('module', 'stealourcontent_stats') . '/js/soc_stats.js', 'file');
-
-  drupal_add_css(drupal_get_path('module', 'stealourcontent_stats') . '/js/tablesorter/themes/blue/tablesorter.css');
-
-  stealourcontent_load_stats();
-
   $output = '<h1>' . t('StealOurContent Stats') . '</h1>';
 
   $header = array(
-    'nid' => t('nid'),
-    'title' => t('Title'),
-    'referer' => t('Referer'),
-    'count' => t('Views'),
+    array('data' => 'nid', 'field' => 'nid', 'sort' => 'ASC'),
+    array('data' => t('Title'), 'field' => 'title', 'sort' => 'ASC'),
+    array('data' => t('Referer'), 'field' => 'referer', 'sort' => 'ASC'),
+    array('data' => t('Views'), 'field' => 'views', 'sort' => 'DESC'),
   );
 
-  $records = stealourcontent_get_referer_view_counts();
+
+  $records = stealourcontent_load_stats($header);
   $rows = array();
 
-  foreach ($records as $referer => $nids) {
-    foreach ($nids as $nid => $count) {
-      $node = node_load((int) $nid);
-      $rows[] = array(
-        'nid' => l($nid, 'node/' . $nid),
-        'title' => l(check_plain($node->title), 'node/' . $nid),
-        'referer' => l(check_plain($referer), check_plain($referer)),
-        'count' => $count,
-      );
-    }
+  foreach ($records as $key => $value) {
+    $rows[] = array(
+      'nid' => l($value->nid, 'node/' . $value->nid),
+      'title' => l(check_plain($value->title), 'node/' . $value->nid),
+      'referer' => l(check_plain($value->referer), check_plain($value->referer)),
+      array('field' => 'stats.views', 'data' => $value->views),
+    );
   }
 
   $output .= theme('table', array(
     'header' => $header, 'rows' => $rows, 'attributes' => array(
       'id' => 'soc_stats_table',
       'class' => array('tablesorter'),
-    )));
+    ))).theme('pager');
 
   return $output;
 }

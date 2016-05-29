@@ -76,51 +76,29 @@ function stealourcontent_save_node_views() {
  *
  * @todo For sites with large amount of shares we might want paged results.
  */
-function stealourcontent_load_stats() {
+function stealourcontent_load_stats($header=NULL) {
 
   $stats = array();
 
-  $result = db_select('stealourcontent_stats', 'stats')
-  ->fields('stats')
-  ->orderBy('stats.referer', 'ASC')
-  ->orderBy('stats.nid', 'DESC')
-  ->execute()
+  $query = db_select('stealourcontent_stats', 'stats');
+
+  $query->leftJoin('node', 'n', 'stats.nid = n.nid');
+
+  $query->groupBy('stats.referer');
+  $query->groupBy('stats.nid');
+
+  $query->fields('stats');
+  $query->fields('n', array('title'));
+
+  $query->addExpression("COUNT(*)", 'views');
+
+  $query = $query->extend('PagerDefault')->limit(50)
+  ->extend('TableSort');
+
+  $query->orderByHeader($header);
+
+  $result = $query->execute()
   ->fetchAll();
 
   return $result;
-}
-
-/**
- * Get view counts per referer.
- *
- * @return array
- *   An array of stats indexed by referer. Each referer contains an associative
- *   array of nid => view count.
- */
-function stealourcontent_get_referer_view_counts() {
-
-  $records = stealourcontent_load_stats();
-
-  $rows = array();
-  if (count($records)) {
-    $first_key = key($records);
-    $nid = $records[$first_key]->nid;
-    $referer = $records[$first_key]->referer;
-    $counts = array();
-    $count = 0;
-    foreach ($records as $record) {
-      if ($nid == $record->nid && $referer == $record->referer) {
-        $count++;
-      }
-      else {
-        $count = 1;
-      }
-      $rows[$record->referer][$record->nid] = $count;
-
-      $nid = $record->nid;
-      $referer = $record->referer;
-    }
-  }
-
-  return $rows;
 }

@@ -72,9 +72,6 @@ function stealourcontent_save_node_views() {
  *
  * @return array
  *   An array of stealourcontent_stats records containing all fields.
- *   Grouped by referer, ordered by nid, referer.
- *
- * @todo For sites with large amount of shares we might want paged results.
  */
 function stealourcontent_load_stats($header=NULL) {
 

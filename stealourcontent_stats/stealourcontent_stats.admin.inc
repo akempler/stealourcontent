@@ -35,7 +35,10 @@ function stealourcontent_stats() {
   }
 
   $output .= theme('table', array(
-    'header' => $header, 'rows' => $rows, 'attributes' => array(
+    'header' => $header,
+    'rows' => $rows,
+    'empty' => t('No data has been recorded yet.'),
+    'attributes' => array(
       'id' => 'soc_stats_table',
       'class' => array('tablesorter'),
     ))).theme('pager');
